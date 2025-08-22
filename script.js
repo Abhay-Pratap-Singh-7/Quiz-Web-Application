@@ -41,11 +41,10 @@ function displayQuestion(count,data) {
 
   if ( count >= 10 ){
     quizScore.textContent = 'Score is : ' + score;
-    question.style.display = 'none';
+    question.textContent = 'Thanks for Playing';
     for ( var i = 0; i < answers.length; i++ ){
       answers[i].style.display = 'none';
     }
-    answers.style.display = 'none';
     next_button.style.display = 'none';
   }
 
@@ -96,8 +95,6 @@ for(let i=0;i<answers.length;i++)
 
 next_button.addEventListener('click', () =>{
   count=count+1;
-  console.log("next",data, count);
-  
   displayQuestion(count,data);
 })
 fetchQuestions().then((data) => {
