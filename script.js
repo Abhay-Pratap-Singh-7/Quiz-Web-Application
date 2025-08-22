@@ -1,175 +1,110 @@
-const questions = [
-    {
-        question: "A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?",
-        answers: [
-            { text: "120 meters", correct: false },
-            { text: "180 meters", correct: false },
-            { text: "150 meters", correct: true },
-            { text: "200 meters", correct: false },
-        ]
-    },
-    {
-        question: "If a car travels 100 km in 2 hours, what is its average speed?",
-        answers: [
-            { text: "40 km/hr", correct: false },
-            { text: "50 km/hr", correct: true },
-            { text: "60 km/hr", correct: false },
-            { text: "45 km/hr", correct: false },
-        ]
-    },
-    {
-        question: "What is 20% of 250?",
-        answers: [
-            { text: "50", correct: true },
-            { text: "25", correct: false },
-            { text: "100", correct: false },
-            { text: "20", correct: false },
-        ]
-    },
-    {
-        question: "If a person buys a book for $10 and sells it for $12, what is the profit percentage?",
-        answers: [
-            { text: "10%", correct: false },
-            { text: "20%", correct: true },
-            { text: "2%", correct: false },
-            { text: "25%", correct: false },
-        ]
-    },
-    {
-        question: "The sum of three consecutive integers is 21. What are the integers?",
-        answers: [
-            { text: "5, 6, 7", correct: false },
-            { text: "6, 7, 8", correct: true },
-            { text: "7, 8, 9", correct: false },
-            { text: "4, 5, 6", correct: false },
-        ]
-    },
-    {
-        question: "A and B can do a piece of work in 10 days, B and C in 15 days, and A and C in 20 days. How long will B alone take to do it?",
-        answers: [
-            { text: "12 days", correct: false },
-            { text: "15 days", correct: false },
-            { text: "20 days", correct: false },
-            { text: "24 days", correct: true },
-        ]
-    },
-    {
-        question: "A pipe can fill a tank in 10 hours. Another pipe can empty the same tank in 15 hours. If both pipes are opened, in how many hours will the tank be full?",
-        answers: [
-            { text: "20 hours", correct: false },
-            { text: "30 hours", correct: true },
-            { text: "25 hours", correct: false },
-            { text: "10 hours", correct: false },
-        ]
-    },
-    {
-        question: "What is the simple interest on $5,000 at 5% per annum for 3 years?",
-        answers: [
-            { text: "$500", correct: false },
-            { text: "$750", correct: true },
-            { text: "$1,000", correct: false },
-            { text: "$600", correct: false },
-        ]
-    },
-    {
-        question: "If 5 workers can build a wall in 20 hours, how many hours will it take 10 workers to build the same wall?",
-        answers: [
-            { text: "10 hours", correct: true },
-            { text: "5 hours", correct: false },
-            { text: "20 hours", correct: false },
-            { text: "15 hours", correct: false },
-        ]
-    },
-    {
-        question: "What is the median of the following set of numbers: 12, 15, 11, 13, 17?",
-        answers: [
-            { text: "11", correct: false },
-            { text: "13", correct: true },
-            { text: "14", correct: false },
-            { text: "15", correct: false },
-        ]
-    }
-];
+const question = document.getElementById('hehe')
+const answers = [document.getElementById('1'), document.getElementById('2'), document.getElementById('3'), document.getElementById('4')]
+const next_button = document.getElementById('next-btn')
+const quizScore = document.getElementById('heading')
 
-const questionElement = document.getElementById("question");
-const answerButtons = document.getElementById("answer-buttons");
-const nextButton = document.getElementById("next-btn");
+var count = 0;
+var correctAnsIndex = -1;
+var data = {};
+var score = 0;
 
-let currentQuestionIndex = 0;
-let score = 0;
-
-function startQuiz() {
-    currentQuestionIndex = 0;
-    score = 0;
-    nextButton.innerHTML = "Next";
-    showQuestion();
+function shuffleArray(array) {
+  let currentIndex = array.length;
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]
+    ];
+  }
+  return array;
 }
 
-function showQuestion() {
-    resetState();
-    let currentQuestion = questions[currentQuestionIndex];
-    let questionNo = currentQuestionIndex + 1;
-    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
+async function fetchQuestions() {
+  const url = 'https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
 
-    currentQuestion.answers.forEach(answer => {
-        const button = document.createElement("button");
-        button.innerHTML = answer.text;
-        button.classList.add("btn");
-        answerButtons.appendChild(button);
-        if (answer.correct) {
-            button.dataset.correct = answer.correct;
+    try {
+        const response = await fetch(url)
+        const data = await response.json()
+        return data;
+    }
+    catch(error){
+      if (error.message.includes('Failed to fetch')) {
+            throw new Error('Network error. Please check your internet connection.');
         }
-        button.addEventListener("click", selectAnswer);
-    });
-}
-
-function resetState() {
-    nextButton.style.display = "none";
-    while (answerButtons.firstChild) {
-        answerButtons.removeChild(answerButtons.firstChild);
+        throw error;
     }
 }
 
-function selectAnswer(e) {
-    const selectedBtn = e.target;
-    const isCorrect = selectedBtn.dataset.correct === "true";
-    if (isCorrect) {
-        selectedBtn.classList.add("correct");
-        score++;
-    } else {
-        selectedBtn.classList.add("incorrect");
+function displayQuestion(count,data) {
+
+  if ( count >= 10 ){
+    quizScore.textContent = 'Score is : ' + score;
+    question.style.display = 'none';
+    for ( var i = 0; i < answers.length; i++ ){
+      answers[i].style.display = 'none';
     }
-    Array.from(answerButtons.children).forEach(button => {
-        if (button.dataset.correct === "true") {
-            button.classList.add("correct");
+    answers.style.display = 'none';
+    next_button.style.display = 'none';
+  }
+
+    try {
+        console.log(data);
+        question.textContent = data.results[count].question
+        const correct = data.results[count].correct_answer;
+        const allAnswer = [data.results[count].correct_answer, data.results[count].incorrect_answers[0], data.results[count].incorrect_answers[1], data.results[count].incorrect_answers[2]]
+        const shuffledAnswers = shuffleArray(allAnswer);
+        
+        correctAnsIndex = shuffledAnswers.indexOf(correct);
+
+        answers.forEach((ans) => {
+          ans.style.backgroundColor = "white";
+        })
+        
+        answers[0].textContent = shuffledAnswers[0]
+        answers[1].textContent = shuffledAnswers[1]
+        answers[2].textContent = shuffledAnswers[2]
+        answers[3].textContent = shuffledAnswers[3]
+        return data;
+    }
+    catch (error) {
+        if (error.message.includes('Failed to fetch')) {
+            throw new Error('Network error. Please check your internet connection.');
         }
-        button.disabled = true;
-    });
-    nextButton.style.display = "block";
-}
-
-function showScore() {
-    resetState();
-    questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
-    nextButton.innerHTML = "Play Again";
-    nextButton.style.display = "block";
-}
-
-function handleNextButton() {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < questions.length) {
-        showQuestion();
-    } else {
-        showScore();
+        throw error;
     }
 }
 
-nextButton.addEventListener("click", () => {
-    if (currentQuestionIndex < questions.length) {
-        handleNextButton();
-    } else {
-        startQuiz();
-    }
-});
 
-startQuiz();
+function isCorrectAns(selectedIndex) {
+  if (selectedIndex === correctAnsIndex) {
+    answers[selectedIndex].style.backgroundColor = "green";
+    score = score + 1;
+  } else {
+    answers[selectedIndex].style.backgroundColor = "red";
+    answers[correctAnsIndex].style.backgroundColor = "green"; // highlight correct one
+  }
+}
+
+for(let i=0;i<answers.length;i++)
+{
+  answers[i].addEventListener("click", () => {
+    isCorrectAns(i);
+  });
+}
+
+next_button.addEventListener('click', () =>{
+  count=count+1;
+  console.log("next",data, count);
+  
+  displayQuestion(count,data);
+})
+fetchQuestions().then((data) => {
+  console.log(data);
+  this.data = data
+  displayQuestion(count,data);
+})
+
+
+

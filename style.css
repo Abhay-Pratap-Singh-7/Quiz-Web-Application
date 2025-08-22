@@ -1,69 +1,67 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: 'Poppins' , sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     box-sizing: border-box;
 }
 
 body {
-    background: #222 ;
+    background: #222;
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.app {
-    background: #fff;
+.container {
     width: 90%;
     max-width: 600px;
-    margin: 100px auto 0;
-    border-radius: 10px;
-    padding: 30px;
+    margin-top: 30px;
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 25px;
 }
 
-.app h1 {
-    font-size: 25px;
-    color: #001e4d;
-    font-weight: 600;
-    border-bottom: 1px solid #333;
-    padding-bottom: 30px;
+.heading h1 {
+    color: white;
 }
 
-.quiz {
-    padding: 20px 0;
-}
-
-.quiz h2 {
+.question h2 {
+    color: aliceblue;
+    margin-top: 20px;
     font-size: 18px;
-    color: #001e4d;
-    font-weight: 600;
 }
 
-.btn {
-    background: #fff;
-    color: #222;
-    font-weight: 600;
-    width: 100%;
-    border: 1px solid #222;
+.option {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
     padding: 10px;
-    margin: 10px;
-    text-align: left;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
+    margin-top: 10px;
 }
 
-.btn:hover {
-    background: #222;
-    color: #fff;
+.option button {
+    margin: 5px;
+    border: none;
+    border-radius: 50px;
+    height: 50px;
+    color: black;
 }
 
-#next-btn {
-    background: #001e4d;
-    color: #fff;
-    font-weight: 500;
-    width: 150px;
-    border: 0;
-    padding: 10px;
-    margin: 20px auto 0;
-    border-radius: 4px;
-    cursor: pointer;
-    display: none;
+.option button:hover, .next button:hover{
+    background: #aaa;
+    color: black;
+}
+
+.next {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.next button {
+    width: 100px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 50px;
+    height: 40px;
 }
